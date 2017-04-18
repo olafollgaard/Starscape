@@ -40,7 +40,8 @@ AVRDUDE_CONF = /etc/avrdude.conf
 #-----------------------------
 # Core and intermediate files
 
-core_c_files = pins_arduino WInterrupts wiring_analog wiring wiring_digital wiring_pulse wiring_shift
+core_c_files = WInterrupts wiring_analog wiring wiring_digital wiring_pulse wiring_shift
+#core_c_files = pins_arduino WInterrupts wiring_analog wiring wiring_digital wiring_pulse wiring_shift
 core_cpp_files = HardwareSerial main Print Tone WMath WString
 tmp_dir = /tmp/build_arduino
 sketch_cpp = $(tmp_dir)/$(SKETCH_NAME).cpp
@@ -89,7 +90,7 @@ $(sketch_hex): $(sketch_elf)
 
 # Compile to elf
 $(sketch_elf): $(sketch_o) $(core_o)
-		$(CC) -mmcu=$(MCU) -lm -Wl,--gc-sections -Os -o %@ $^
+		$(CC) -mmcu=$(MCU) -lm -Wl,--gc-sections -Os -o $@ $^
 
 # Generate sketch .cpp from .ino
 $(sketch_cpp): $(SKETCH_NAME)
@@ -97,10 +98,14 @@ $(sketch_cpp): $(SKETCH_NAME)
 		@echo '#include "WProgram.h"' > $@
 		@cat $< >> $@
 
-# Compile core .c files
-$(tmp_dir)/%.o: $(ARDUINO_CORE)/%.c
-		$(CC) -c $(CFLAGS) $(CPPFLAGS) %< -o %@
+# Compile sketch .cpp file
+$(tmp_dir)/%.o:: $(tmp_dir)/%.cpp
+		$(CXX) -c $(CXXFLAGS) $(CPPFLAGS) $< -o $@
 
-# Compile sketch .cpp and core .cpp files
-$(tmp_dir)/%.o: $(ARDUINO_CORE)/%.cpp $(tmp_dir)/%.cpp
-		$(CXX) -c $(CXXFLAGS) $(CPPFLAGS) %< -o %@
+# Compile core .c files
+$(tmp_dir)/%.o:: $(ARDUINO_CORE)/%.c
+		$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
+
+# Compile core .cpp files
+$(tmp_dir)/%.o:: $(ARDUINO_CORE)/%.cpp
+		$(CXX) -c $(CXXFLAGS) $(CPPFLAGS) $< -o $@
