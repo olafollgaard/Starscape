@@ -7,15 +7,20 @@
 # Sketch filename (should be in the same directory of Makefile)
 SKETCH_NAME = Stjernehimmel.ino
 
-# The path to the Arduino hardware core folder
-ARDUINO_CORE = /home/olaf/arduino-1.8.1/hardware/arduino/avr/cores/arduino
-#ARDUINO_CORE = /home/olaf/Arduino/tiny/avr/cores/tiny
-INCLUDE = -I. -I$(ARDUINO_CORE)
-
-# Target MCU and core frequency
-#  MCU = atmega328p | attiny85
+# MCU, frequency, Arduino hardware core folder, include path, and which .c and .cpp files to compile
 MCU = atmega328p
 F_CPU = 16000000
+ARDUINO_CORE = /home/olaf/arduino-1.8.1/hardware/arduino/avr/cores/arduino
+INCLUDE = -I. -I$(ARDUINO_CORE)
+CORE_C_FILES = WInterrupts wiring_analog wiring wiring_digital wiring_pulse wiring_shift
+CORE_CPP_FILES = abi CDC HardwareSerial HardwareSerial0 HardwareSerial1 HardwareSerial2 HardwareSerial3 \
+		IPAddress main new PluggableUSB Print Stream Tone USBCore WMath WString
+#MCU = attiny85
+#F_CPU = 8000000
+#ARDUINO_CORE = /home/olaf/Arduino/tiny/avr/cores/tiny
+#INCLUDE = -I. -I$(ARDUINO_CORE)
+#CORE_C_FILES = pins_arduino WInterrupts wiring_analog wiring wiring_digital wiring_pulse wiring_shift
+#CORE_CPP_FILES = HardwareSerial main Print Tone WMath WString
 
 # Reset and upload configuration
 PORT = /dev/ttyACM0
@@ -40,15 +45,12 @@ AVRDUDE_CONF = /etc/avrdude.conf
 #-----------------------------
 # Core and intermediate files
 
-core_c_files = WInterrupts wiring_analog wiring wiring_digital wiring_pulse wiring_shift
-#core_c_files = pins_arduino WInterrupts wiring_analog wiring wiring_digital wiring_pulse wiring_shift
-core_cpp_files = HardwareSerial main Print Tone WMath WString
 tmp_dir = /tmp/build_arduino
 sketch_cpp = $(tmp_dir)/$(SKETCH_NAME).cpp
 sketch_elf = $(tmp_dir)/$(SKETCH_NAME).elf
 sketch_hex = $(tmp_dir)/$(SKETCH_NAME).hex
 sketch_o = $(tmp_dir)/$(SKETCH_NAME).o
-core_o = $(core_c_files:%=$(tmp_dir)/%.o) $(core_cpp_files:%=$(tmp_dir)/%.o)
+core_o = $(CORE_C_FILES:%=$(tmp_dir)/%.o) $(CORE_CPP_FILES:%=$(tmp_dir)/%.o)
 
 #-------------------
 # Targets and rules
