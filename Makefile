@@ -1,7 +1,5 @@
-#---------------------------------------------------------------
-# Sketch filename (should be in the same directory as Makefile)
 SKETCH_NAME = Stjernehimmel.ino
-# Target MCU
-MCU = atmega328p
+TARGET_SYSTEM = pro_trinket_5v
+INCLUDE_LIBS = Adafruit_NeoPixel
 
 include ../makeArduino/makeArduino.mk
