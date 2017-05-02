@@ -3,16 +3,17 @@
 
 bool Star::Update(Adafruit_NeoPixel& strip, uint16_t n)
 {
-	uint32_t current = strip.getPixelColor(n);
+	StarColor current;
+	current.color = strip.getPixelColor(n);
 	if (millis() - _startMs >= _transitionMs) Reset(current);
-	if (!UpdateTransition(*(StarColor*)(&current))) return false;
-	strip.setPixelColor(n, current);
+	if (!UpdateTransition(current)) return false;
+	strip.setPixelColor(n, current.color);
 	return true;
 }
 
-void Star::Reset(uint32_t current)
+void Star::Reset(StarColor& current)
 {
-	_from = *(StarColor*)(&current);
+	_from = current;
 	for(uint8_t ch = 0; ch < CHANNELS_PER_PIXEL; ch++) {
 		_to.channel[ch] = random(256);
 	}

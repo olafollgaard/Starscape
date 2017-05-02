@@ -5,8 +5,9 @@
 #include <Adafruit_NeoPixel.h>
 #include "Constants.h"
 
-struct StarColor {
+union StarColor {
 	uint8_t channel[CHANNELS_PER_PIXEL];
+	uint32_t color;
 };
 
 class Star {
@@ -16,7 +17,7 @@ public:
 private:
 	unsigned long _startMs, _transitionMs;
 	StarColor _from, _to;
-	void Reset(uint32_t current);
+	void Reset(StarColor& current);
 	bool UpdateTransition(StarColor& current);
 	bool UpdateChannelTransition(StarColor& current, uint8_t ch, float pct);
 };
