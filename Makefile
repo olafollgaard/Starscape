@@ -1,5 +1,5 @@
-SKETCH_NAME = Stjernehimmel.ino
-TARGET_SYSTEM = pro_trinket_5v
+SKETCH_NAME = Starscape.ino
+TARGET_SYSTEM = uno
 INCLUDE_LIBS = Adafruit_NeoPixel
 
 include ../makeArduino/makeArduino.mk
