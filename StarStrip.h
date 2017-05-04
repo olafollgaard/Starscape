@@ -7,13 +7,13 @@
 
 class StarStrip {
 public:
-	StarStrip();
+	StarStrip(uint16_t n, uint8_t pin);
 	void Update();
 
 private:
-	Adafruit_NeoPixel _strip = Adafruit_NeoPixel(
-		STARSTRIP_LENGTH, STARSTRIP_PIN, NEO_GRB | NEO_KHZ800);
-	Star _stars[STARSTRIP_LENGTH];
+	uint16_t _length;
+	Adafruit_NeoPixel _strip;
+	Star* _stars;
 };
 
 #endif
