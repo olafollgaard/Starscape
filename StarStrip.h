@@ -3,7 +3,7 @@
 
 #include <Adafruit_NeoPixel.h>
 #include "Constants.h"
-#include "Star.h"
+#include "StarState.h"
 
 class StarStrip {
 public:
@@ -13,7 +13,7 @@ public:
 private:
 	uint16_t _length;
 	Adafruit_NeoPixel _strip;
-	Star* _stars;
+	StarState* _states;
 };
 
 #endif
