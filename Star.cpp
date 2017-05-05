@@ -36,6 +36,8 @@ bool Star::UpdateTransition(StarColor& current)
 bool Star::UpdateChannelTransition(StarColor& current, uint8_t ch, float pct)
 {
 	uint8_t prev = current.channel[ch];
-	current.channel[ch] = (_to.channel[ch] - _from.channel[ch]) * pct + _from.channel[ch];
+	int16_t value = (_to.channel[ch] - _from.channel[ch]) * pct + _from.channel[ch];
+	value = value < 0 ? 0 : value > 0xFF ? 0xFF : value;
+	current.channel[ch] = (uint8_t)value;
 	return current.channel[ch] != prev;
 }
