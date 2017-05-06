@@ -3,36 +3,26 @@
 
 bool StarState::Update(Adafruit_NeoPixel& strip, uint16_t n, StarEffect* effect)
 {
-	StarColor current;
-	current.color = strip.getPixelColor(n);
+	color_t current;
+	current.value = strip.getPixelColor(n);
 	if (millis() - _startMs >= _transition.timeMs) NextTransition(current, effect);
 	if (!TransitionStep(current)) return false;
-	strip.setPixelColor(n, current.color);
+	strip.setPixelColor(n, current.value);
 	return true;
 }
 
-void StarState::NextTransition(StarColor& current, StarEffect* effect)
+void StarState::NextTransition(color_t& current, StarEffect* effect)
 {
 	_origin = current;
 	effect->Next(_transition);
 	_startMs = millis();
 }
 
-bool StarState::TransitionStep(StarColor& current)
+bool StarState::TransitionStep(color_t& current)
 {
 	float pct = (millis() - _startMs) / _transition.timeMs;
-	bool updated = false;
-	for(uint8_t ch = 0; ch < CHANNELS_PER_PIXEL; ch++) {
-		if(TransitionStepChannel(current, ch, pct)) updated = true;
-	}
-	return updated;
-}
-
-bool StarState::TransitionStepChannel(StarColor& current, uint8_t ch, float pct)
-{
-	uint8_t prev = current.channel[ch];
-	int16_t value = (_transition.goal.channel[ch] - _origin.channel[ch]) * pct + _origin.channel[ch];
-	value = value < 0 ? 0 : value > 0xFF ? 0xFF : value;
-	current.channel[ch] = (uint8_t)value;
-	return current.channel[ch] != prev;
+	pct = pct < 0 ? 0 : pct > 1 ? 1 : pct;
+	uint32_t prev = current.value;
+	current.value = color_t::Interpolate(pct, _origin.value, _transition.color.value);
+	return current.value != prev;
 }

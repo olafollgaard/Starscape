@@ -2,7 +2,7 @@
 #define _STARSTATE_H
 
 #include <Adafruit_NeoPixel.h>
-#include "StarValue.h"
+#include "Color.h"
 #include "StarEffect.h"
 
 class StarState {
@@ -10,12 +10,11 @@ public:
 	bool Update(Adafruit_NeoPixel& strip, uint16_t n, StarEffect* effect);
 
 private:
-	unsigned long _startMs;
-	StarColor _origin;
-	StarTransition _transition;
-	void NextTransition(StarColor& current, StarEffect* effect);
-	bool TransitionStep(StarColor& current);
-	bool TransitionStepChannel(StarColor& current, uint8_t ch, float pct);
+	uint32_t _startMs;
+	color_t _origin;
+	transition_t _transition;
+	void NextTransition(color_t& current, StarEffect* effect);
+	bool TransitionStep(color_t& current);
 };
 
 #endif

@@ -1,12 +1,12 @@
 #ifndef _STAREFFECT_H
 #define _STAREFFECT_H
 
-#include "StarValue.h"
+#include "Color.h"
 
 class StarEffect {
 public:
 	virtual void Update() { }
-	virtual void Next(StarTransition& transition) = 0;
+	virtual void Next(transition_t& transition) = 0;
 };
 
 #endif
