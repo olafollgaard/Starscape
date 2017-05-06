@@ -14,17 +14,16 @@ StarEffect *starEffectA, *starEffectB;
 
 void setup()
 {
-	randomSeed(42);
-	starStripA = new StarStrip(STRIP_LENGTH, STRIP_A_PIN);
-	starStripB = new StarStrip(STRIP_LENGTH, STRIP_B_PIN);
-	starEffectA = new NormalEffect();
-	starEffectB = new NormalEffect();
-
 	setSyncProvider(RTC.get);
 	// Serial.begin(9600);
 	// if(timeStatus() != timeSet)
 	// 	Serial.println("Unable to sync with the RTC");
 
+	randomSeed(42);
+	starStripA = new StarStrip(STRIP_LENGTH, STRIP_A_PIN);
+	starStripB = new StarStrip(STRIP_LENGTH, STRIP_B_PIN);
+	starEffectA = new NormalEffect();
+	starEffectB = new NormalEffect();
 }
 
 void loop()
