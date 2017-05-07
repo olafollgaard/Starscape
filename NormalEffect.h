@@ -33,6 +33,8 @@ private:
 	static const Period periods[];
 	static const time_t periodTransitionDuration;
 	static const Levels twinkleLevels;
+	static const uint32_t twinkleMinIntervalMs;
+	static const uint32_t twinkleMaxIntervalMs;
 
 private:
 	PeriodId _activePeriod;
