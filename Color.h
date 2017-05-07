@@ -2,7 +2,9 @@
 #define _COLOR_H
 
 #include <stdint.h>
-#include "Constants.h"
+
+// N.B. 32-bit pixels of 8-bit channels = max 4 channels
+#define CHANNELS_PER_PIXEL 3
 
 union color_t {
 	uint8_t channel[CHANNELS_PER_PIXEL];

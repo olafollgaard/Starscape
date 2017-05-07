@@ -20,6 +20,13 @@ private:
 		transition_t lo, hi;
 	};
 
+	struct Twinkle {
+		Levels levels;
+		uint32_t currStartMs, currIntervalMs, minIntervalMs, maxIntervalMs;
+		bool CanStart();
+		void Start();
+	};
+
 private:
 	time_t _periodEndTime[PERIOD_COUNT];
 	Levels _periodLevels[PERIOD_COUNT];
@@ -27,6 +34,7 @@ private:
 	time_t _periodTransitionDuration;
 	Levels _activeLevels;
 	bool _activeLevelsInitialized;
+	Twinkle _twinkle;
 
 	PeriodId GetPeriod(time_t timeOfDay);
 	void PeriodTransitionStep(float pct);

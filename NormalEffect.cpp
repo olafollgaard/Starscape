@@ -18,13 +18,17 @@ NormalEffect::NormalEffect()
 	_periodLevels [PeriodId::Evening ].lo.Init( 1000, 0x808080);
 	_periodLevels [PeriodId::Evening ].hi.Init( 5000, 0xC0C0C0);
 	_periodEndTime[PeriodId::Evening ] = SimpleTimeOfDay( 2100);
-	_periodLevels [PeriodId::Late    ].lo.Init( 1000, 0x202020);
-	_periodLevels [PeriodId::Late    ].hi.Init( 5000, 0x606060);
+	_periodLevels [PeriodId::Late    ].lo.Init( 3000, 0x202020);
+	_periodLevels [PeriodId::Late    ].hi.Init( 8000, 0x606060);
 	_periodEndTime[PeriodId::Late    ] = SimpleTimeOfDay( 2230);
-	_periodLevels [PeriodId::NightOwl].lo.Init( 1000,        0);
-	_periodLevels [PeriodId::NightOwl].hi.Init( 5000, 0x404040);
+	_periodLevels [PeriodId::NightOwl].lo.Init( 3000,        0);
+	_periodLevels [PeriodId::NightOwl].hi.Init( 8000, 0x404040);
 	_periodEndTime[PeriodId::NightOwl] = SimpleTimeOfDay( 2330);
 	_activeLevelsInitialized = false;
+	_twinkle.levels                   .lo.Init( 1000, 0xC0C0C0);
+	_twinkle.levels                   .hi.Init( 3000, 0xFFFFFF);
+	_twinkle.minIntervalMs =   500;
+	_twinkle.maxIntervalMs = 15000;
 }
 
 void NormalEffect::Update()
@@ -49,14 +53,16 @@ void NormalEffect::Update()
 
 void NormalEffect::Next(transition_t& transition)
 {
+	Levels* levels = &_activeLevels;
+	if (_periodLevels[_activePeriod].hi.color.value != 0 && _twinkle.CanStart()) {
+		_twinkle.Start();
+		levels = &_twinkle.levels;
+	}
 	for(uint8_t ch = 0; ch < CHANNELS_PER_PIXEL; ch++) {
 		transition.color.channel[ch] = random(
-			_activeLevels.lo.color.channel[ch],
-			_activeLevels.hi.color.channel[ch]);
+			levels->lo.color.channel[ch], levels->hi.color.channel[ch]);
 	}
-	transition.timeMs = random(
-		_activeLevels.lo.timeMs,
-		_activeLevels.hi.timeMs);
+	transition.timeMs = random(levels->lo.timeMs, levels->hi.timeMs);
 }
 
 NormalEffect::PeriodId NormalEffect::GetPeriod(time_t timeOfDay)
@@ -76,4 +82,15 @@ void NormalEffect::PeriodTransitionStep(float pct)
 		_periodLevels[_activePeriod].lo, _periodLevels[nextPeriod].lo);
 	transition_t::Interpolate(pct, _activeLevels.hi,
 		_periodLevels[_activePeriod].hi, _periodLevels[nextPeriod].hi);
+}
+
+bool NormalEffect::Twinkle::CanStart()
+{
+	return (millis() - currStartMs) > currIntervalMs;
+}
+
+void NormalEffect::Twinkle::Start()
+{
+	currStartMs = millis();
+	currIntervalMs = random(minIntervalMs, maxIntervalMs);
 }
