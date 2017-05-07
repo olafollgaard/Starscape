@@ -27,7 +27,8 @@ uint32_t transition_t::InterpolateTimeMs(float pct, int32_t a, int32_t b)
 	return res < 0 ? 0 : res;
 }
 
-void transition_t::Interpolate(float pct, transition_t& dst, transition_t& a, transition_t& b)
+void transition_t::Interpolate(float pct, transition_t& dst,
+	const transition_t& a, const transition_t& b)
 {
 	dst.color.value = color_t::Interpolate(pct, a.color.value, b.color.value);
 	dst.timeMs = transition_t::InterpolateTimeMs(pct, a.timeMs, b.timeMs);

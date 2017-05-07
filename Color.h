@@ -17,7 +17,8 @@ struct transition_t {
 	color_t color;
 	void Init(uint32_t time, uint32_t value);
 	static uint32_t InterpolateTimeMs(float pct, int32_t a, int32_t b);
-	static void Interpolate(float pct, transition_t& res, transition_t& a, transition_t& b);
+	static void Interpolate(float pct, transition_t& res,
+		const transition_t& a, const transition_t& b);
 };
 
 #endif

@@ -6,7 +6,6 @@
 
 class NormalEffect : public StarEffect {
 public:
-	NormalEffect();
 	void Update();
 	void Next(transition_t& transition);
 
@@ -16,22 +15,27 @@ private:
 		PERIOD_COUNT
 	};
 
+	struct Period {
+		transition_t lo, hi;
+		time_t endTimeOfDay;
+	};
+
 	struct Levels {
 		transition_t lo, hi;
 	};
 
 	struct Twinkle {
-		Levels levels;
-		uint32_t currStartMs, currIntervalMs, minIntervalMs, maxIntervalMs;
+		uint32_t currStartMs, currIntervalMs;
 		bool CanStart();
 		void Start();
 	};
 
+	static const Period periods[];
+	static const time_t periodTransitionDuration;
+	static const Levels twinkleLevels;
+
 private:
-	time_t _periodEndTime[PERIOD_COUNT];
-	Levels _periodLevels[PERIOD_COUNT];
 	PeriodId _activePeriod;
-	time_t _periodTransitionDuration;
 	Levels _activeLevels;
 	bool _activeLevelsInitialized;
 	Twinkle _twinkle;
