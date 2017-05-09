@@ -1,7 +1,7 @@
 #include <Arduino.h>
-#include "NormalEffect.h"
+#include "StarEffect.h"
 
-void NormalEffect::Update()
+void StarEffect::Update()
 {
 	time_t timeOfDay = now();
 	timeOfDay -= previousMidnight(timeOfDay);
@@ -22,7 +22,7 @@ void NormalEffect::Update()
 	}
 }
 
-void NormalEffect::Next(transition_t& transition)
+void StarEffect::Next(transition_t& transition)
 {
 	const Levels* levels = &_activeLevels;
 	if (periods[_activePeriod].hi.color.value != 0 && _twinkle.CanStart()) {
@@ -36,7 +36,7 @@ void NormalEffect::Next(transition_t& transition)
 	transition.timeMs = random(levels->lo.timeMs, levels->hi.timeMs);
 }
 
-NormalEffect::PeriodId NormalEffect::GetPeriod(time_t timeOfDay)
+StarEffect::PeriodId StarEffect::GetPeriod(time_t timeOfDay)
 {
 	for (uint8_t res = 0; res < PERIOD_COUNT; res++) {
 		if (timeOfDay < periods[res].endTimeOfDay) return (PeriodId)res;
@@ -44,7 +44,7 @@ NormalEffect::PeriodId NormalEffect::GetPeriod(time_t timeOfDay)
 	return (PeriodId)0;
 }
 
-void NormalEffect::PeriodTransitionStep(float pct)
+void StarEffect::PeriodTransitionStep(float pct)
 {
 	pct = pct < 0 ? 0 : pct > 1 ? 1 : pct;
 	uint8_t nextPeriod = (uint8_t)_activePeriod + 1;
@@ -55,12 +55,12 @@ void NormalEffect::PeriodTransitionStep(float pct)
 		periods[_activePeriod].hi, periods[nextPeriod].hi);
 }
 
-bool NormalEffect::Twinkle::CanStart()
+bool StarEffect::Twinkle::CanStart()
 {
 	return (millis() - currStartMs) > currIntervalMs;
 }
 
-void NormalEffect::Twinkle::Start()
+void StarEffect::Twinkle::Start()
 {
 	currStartMs = millis();
 	currIntervalMs = random(twinkleMinIntervalMs, twinkleMaxIntervalMs);

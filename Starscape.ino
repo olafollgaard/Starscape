@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <DS3232RTC.h>
 
-#include "NormalEffect.h"
+#include "StarEffect.h"
 
 // Split into two strips for A/B testing
 StarStrip *starStripA, *starStripB;
@@ -22,8 +22,8 @@ void setup()
 	randomSeed(42);
 	starStripA = new StarStrip(STRIP_LENGTH, STRIP_A_PIN);
 	starStripB = new StarStrip(STRIP_LENGTH, STRIP_B_PIN);
-	starEffectA = new NormalEffect();
-	starEffectB = new NormalEffect();
+	starEffectA = new StarEffect();
+	starEffectB = new StarEffect();
 }
 
 void loop()
