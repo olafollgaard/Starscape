@@ -5,15 +5,16 @@
 #include "StarState.h"
 #include "StarEffect.h"
 
+#define STRIP_LENGTH 120
+
 class StarStrip {
 public:
-	StarStrip(uint16_t n, uint8_t pin);
+	StarStrip(uint8_t pin);
 	void Update(StarEffect* effect);
 
 private:
-	uint16_t _length;
 	Adafruit_NeoPixel _strip;
-	StarState* _states;
+	StarState _states[STRIP_LENGTH];
 };
 
 #endif

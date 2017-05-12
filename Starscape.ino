@@ -4,13 +4,10 @@
 
 #include "StarEffect.h"
 
-// Split into two strips for A/B testing
-StarStrip *starStripA, *starStripB;
-StarEffect *starEffectA, *starEffectB;
+#define STRIP_PIN 5
 
-#define STRIP_LENGTH 60
-#define STRIP_A_PIN 5
-#define STRIP_B_PIN 6
+StarStrip starStripA = StarStrip(STRIP_PIN);
+StarEffect starEffect;
 
 void setup()
 {
@@ -20,19 +17,10 @@ void setup()
 	// 	Serial.println("Unable to sync with the RTC");
 
 	randomSeed(42);
-	starStripA = new StarStrip(STRIP_LENGTH, STRIP_A_PIN);
-	starStripB = new StarStrip(STRIP_LENGTH, STRIP_B_PIN);
-	starEffectA = new StarEffect();
-	starEffectB = new StarEffect();
 }
 
 void loop()
 {
-	starEffectA->Update();
-	starEffectB->Update();
-	uint32_t start = millis();
-	starStripA->Update(starEffectA);
-	starStripB->Update(starEffectB);
-	uint32_t elapsed = millis() - start;
-	if (elapsed < 5) delay(5 - elapsed);
+	starEffect.Update();
+	starStripA.Update(&starEffect);
 }

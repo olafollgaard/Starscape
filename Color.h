@@ -9,16 +9,16 @@
 union color_t {
 	uint8_t channel[CHANNELS_PER_PIXEL];
 	uint32_t value;
-	static uint32_t Interpolate(float pct, uint32_t a, uint32_t b);
 };
 
+#define MS_TO_TRANSITION_DURATION(MS) (MS >> 8)
+#define TRANSITION_DURATION_TO_MS(D) (D << 8)
+
 struct transition_t {
-	uint32_t timeMs;
-	color_t color;
-	void Init(uint32_t time, uint32_t value);
-	static uint32_t InterpolateTimeMs(float pct, int32_t a, int32_t b);
-	static void Interpolate(float pct, transition_t& res,
-		const transition_t& a, const transition_t& b);
+	// duration in 256 ms resolution
+	uint8_t duration;
+	// target color
+	uint8_t target[CHANNELS_PER_PIXEL];
 };
 
 #endif
