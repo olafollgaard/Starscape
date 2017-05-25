@@ -1,7 +1,7 @@
 #include "StarStrip.h"
 
 StarStrip::StarStrip(uint8_t pin)
-	: _strip(STRIP_LENGTH, pin, NEO_GRB | NEO_KHZ800)
+	: _strip(_pixels, STRIP_LENGTH, pin, NEO_GRB | NEO_KHZ800)
 {
 	_strip.begin();
 	_strip.clear();

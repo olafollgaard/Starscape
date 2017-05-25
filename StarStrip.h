@@ -14,6 +14,7 @@ public:
 
 private:
 	Adafruit_NeoPixel _strip;
+	uint8_t _pixels[STRIP_LENGTH * CHANNELS_PER_PIXEL];
 	StarState _states[STRIP_LENGTH];
 };
 
