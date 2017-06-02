@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "StarStrip.h"
 #include <stdio.h>
 #include <DS3232RTC.h>
