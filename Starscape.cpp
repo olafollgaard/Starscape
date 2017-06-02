@@ -32,7 +32,8 @@ void setup()
 	randomSeed(42);
 }
 
-void PrintTime(time_t t) {
+void PrintTime(time_t t)
+{
 	lcd.setCursor(0, 0);
 	lcd.print(year(t));
 	lcd.print('-');
@@ -50,7 +51,8 @@ void PrintTime(time_t t) {
 	lcd.print(' ');
 }
 
-void PrintStats(uint16_t fpm, uint16_t ram) {
+void PrintStats(uint16_t fpm, uint16_t ram)
+{
 	lcd.setCursor(0, 1);
 	lcd.print(F("fps:"));
 	float fps = fpm / 60.0;
@@ -62,7 +64,8 @@ void PrintStats(uint16_t fpm, uint16_t ram) {
 time_t displayTime = 0;
 uint16_t fpm = 0;
 
-bool DisplayNeedsUpdate() {
+bool DisplayNeedsUpdate()
+{
 	time_t _now = now();
 	return minute(_now) != minute(displayTime) || hour(_now) != hour(displayTime);
 }
@@ -74,7 +77,8 @@ int getFreeRam()
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
 }
 
-void UpdateDisplay() {
+void UpdateDisplay()
+{
 	if (!DisplayNeedsUpdate()) return;
 	displayTime = now();
 	PrintTime(displayTime);
