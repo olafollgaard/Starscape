@@ -19,7 +19,7 @@ struct PeriodLimits {
 	// period end time in 10 min resolution (24h * 6 = 144 steps)
 	uint8_t endTimeOfDay;
 	#define MAKE_TIMEOFDAY(T) (((T) / 100) * 6 + ((T) % 100) / 10)
-	#define TIMEOFDAY2TIME(T) (T * 10 * SECS_PER_MIN)
+	#define TIMEOFDAY2TIME(T) ((T) * 10 * SECS_PER_MIN)
 };
 
 struct Limits {

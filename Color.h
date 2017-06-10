@@ -11,8 +11,8 @@ union color_t {
 	uint32_t value;
 };
 
-#define MS_TO_TRANSITION_DURATION(MS) (MS >> 8)
-#define TRANSITION_DURATION_TO_MS(D) (D << 8)
+#define MS_TO_TRANSITION_DURATION(MS) ((MS) >> 8)
+#define TRANSITION_DURATION_TO_MS(D) ((D) << 8)
 
 struct transition_t {
 	// duration in 256 ms resolution
