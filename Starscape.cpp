@@ -8,7 +8,7 @@
 
 #define STRIP_PIN 5
 
-StarStrip starStripA = StarStrip(STRIP_PIN);
+StarStrip starStrip = StarStrip(STRIP_PIN);
 StarEffect starEffect;
 
 #define LCD_I2C_Addr 0x27
@@ -64,15 +64,6 @@ void setup()
 	randomSeed(42);
 }
 
-time_t displayTime = 0;
-uint16_t fpm = 0;
-
-bool DisplayNeedsUpdate()
-{
-	time_t _now = now();
-	return minute(_now) != minute(displayTime) || hour(_now) != hour(displayTime);
-}
-
 void PrintTime(time_t t)
 {
 	lcd.setCursor(0, 0);
@@ -92,7 +83,27 @@ void PrintTime(time_t t)
 	lcd.print(' ');
 }
 
-void PrintStats(uint16_t fpm, uint16_t currHeapSize, uint16_t maxHeapSize,
+void PrintColor(uint32_t color)
+{
+	lcd.print((uint8_t)(color >> 16), HEX);
+	lcd.print((uint16_t)color, HEX);
+}
+
+time_t displayTime = 0;
+uint16_t frameCounter = 0;
+#define SECONDS_PER_UPDATE 20
+
+bool DisplayNeedsUpdate()
+{
+	if (displayTime == 0) return true;
+	time_t _now = now();
+	if (second(_now) % SECONDS_PER_UPDATE != 0) return false;
+	return second(_now) != second(displayTime)
+		|| minute(_now) != minute(displayTime)
+		|| hour(_now) != hour(displayTime);
+}
+
+void PrintStats(uint16_t frameCounter, uint16_t currHeapSize, uint16_t maxHeapSize,
 	uint16_t stackPos)
 {
 	lcd.setCursor(18, 0);
@@ -111,8 +122,10 @@ void PrintStats(uint16_t fpm, uint16_t currHeapSize, uint16_t maxHeapSize,
 	lcd.print(' ');
 
 	lcd.setCursor(0, 3);
-	lcd.print(F("fps:"));
-	float fps = fpm / 60.0;
+	lcd.print(F("fps/"));
+	lcd.print((int)SECONDS_PER_UPDATE);
+	lcd.print(':');
+	float fps = frameCounter * 1.0 / SECONDS_PER_UPDATE;
 	lcd.print(fps);
 	lcd.print(' ');
 }
@@ -120,21 +133,15 @@ void PrintStats(uint16_t fpm, uint16_t currHeapSize, uint16_t maxHeapSize,
 void UpdateDisplay()
 {
 	displayTime = now();
-	uint32_t updateStart = micros();
-
 	PrintTime(displayTime);
-	PrintStats(fpm, getCurrHeapSize(), getMaxHeapSize(), getStackPos());
-	fpm = 0;
-
-	lcd.print(F("dus:"));
-	lcd.print(micros() - updateStart);
-	lcd.print(' ');
+	PrintStats(frameCounter, getCurrHeapSize(), getMaxHeapSize(), getStackPos());
+	frameCounter = 0;
 }
 
 void loop()
 {
 	if (DisplayNeedsUpdate()) UpdateDisplay();
 	starEffect.Update();
-	starStripA.Update(&starEffect);
-	fpm++;
+	starStrip.Update(&starEffect);
+	frameCounter++;
 }
