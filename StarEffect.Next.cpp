@@ -12,7 +12,14 @@ void StarEffect::Next(transition_t& transition)
 	uint32_t lo = limits->lo.color;
 	uint32_t hi = limits->hi.color;
 	for (uint8_t ch = 0; ch < CHANNELS_PER_PIXEL; ch++) {
-		transition.target[ch] = random((uint8_t)lo, (uint8_t)hi);
+		if ((uint8_t)hi < 0x80) {
+			uint8_t next = 2 * random((uint8_t)lo, (uint8_t)hi);
+			next = next < (uint8_t)hi ? 0 : next - (uint8_t)hi;
+			transition.target[ch] = next;
+		}
+		else {
+			transition.target[ch] = random((uint8_t)lo, (uint8_t)hi);
+		}
 		lo >>= 8;
 		hi >>= 8;
 	}

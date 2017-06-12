@@ -6,34 +6,26 @@
 bool StarState::TransitionStep(color_t& current)
 {
 	uint16_t nowMs = millis();
-	uint8_t sinceLastMs = (uint8_t)nowMs - _lastUpdateMs;
-	if (sinceLastMs < MIN_MS_BETWEEN_STEPS) return false;
-	uint16_t currMs = nowMs - (uint16_t)sinceLastMs;
-	uint16_t durationMs = TRANSITION_DURATION_TO_MS(_transition.duration);
-
-	float nowPct = (nowMs - _startMs) / durationMs;
-	float currPct = (currMs - _startMs) / durationMs;
-	nowPct = nowPct < 0 ? 0 : nowPct > 1 ? 1 : 0;
-	currPct = currPct < 0 ? 0 : currPct > 1 ? 1 : 0;
+	float nowPct = CalcElapsedPct(nowMs);
 
 	bool updated = false;
 	for (uint8_t ch = 0; ch < CHANNELS_PER_PIXEL; ch++) {
-		int16_t curr = current.channel[ch];
-		int16_t goal = _transition.target[ch];
-		int16_t org = currPct <= 0 ? curr : currPct >= 1 ? goal :
-			// curr == org + (goal - org) * currPct
-			// curr / currPct == org / currPct + goal - org
-			// curr / currPct - goal == org / currPct - org
-			// curr / currPct - goal == org * (currPct - 1)
-			// org ==
-					  (curr / currPct - goal) / (currPct - 1);
-		int16_t next = org + (goal - org) * nowPct;
-		next = next < 0 ? 0 : next > 0xFF ? 0xFF : next;
-		if (next == curr) continue;
+		float curr = current.channel[ch];
+		float goal = _transition.target[ch];
+		float org = _origin[ch];
+		float next = org + (goal - org) * nowPct;
+		uint8_t nextV = next < 0 ? 0 : next > 0xFF ? 0xFF : (uint8_t)next;
+		if (nextV == curr) continue;
 		updated = true;
-		current.channel[ch] = (uint8_t)next;
+		current.channel[ch] = nextV;
 	}
-
-	_lastUpdateMs = nowMs;
 	return updated;
+}
+
+float StarState::CalcElapsedPct(uint16_t timeMs)
+{
+	uint16_t durationMs = TRANSITION_DURATION_TO_MS(_transition.duration);
+	uint16_t elapsedMs = timeMs - _startMs;
+	float elapsedPct = elapsedMs * 1.0 / durationMs;
+	return elapsedPct < 0 ? 0 : elapsedPct > 1 ? 1 : elapsedPct;
 }
