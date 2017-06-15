@@ -9,15 +9,14 @@ class StarState {
 public:
 	bool Update(Adafruit_NeoPixel& strip, uint16_t n, StarEffect* effect);
 
-	uint8_t _origin[CHANNELS_PER_PIXEL];
 	transition_t _transition;
-	// Cut off at 16 bits: 65535 ms = just over one mitute = good enough
-	uint16_t _startMs;
+	// Start time, resolution 16 ms, max period = 256 * 16 ms = 4096 ms
+	uint8_t _start16ms;
 
 private:
-	bool UpdateTransition(StarEffect* effect);
 	bool TransitionStep(color_t& current);
-	float CalcElapsedPct(uint16_t timeMs);
+	float CalcElapsedPct();
+	uint8_t InterpolateByte(float pct, int16_t a, int16_t b);
 };
 
 #endif

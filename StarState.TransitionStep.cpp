@@ -5,27 +5,36 @@
 
 bool StarState::TransitionStep(color_t& current)
 {
-	uint16_t nowMs = millis();
-	float nowPct = CalcElapsedPct(nowMs);
+	float nowPct = CalcElapsedPct();
+	hbr_t &origin = _transition.origin;
+	hbr_t &target = _transition.target;
+	hbr_t next;
+	next.bri = InterpolateByte(nowPct, origin.bri, target.bri);
+	next.hue = _transition.flags.hueDirectSpan
+		? InterpolateByte(nowPct, origin.hue, target.hue)
+		: InterpolateByte(nowPct, 0, target.hue - origin.hue) + origin.hue;
+	color_t nextColor;
+	nextColor.SetColor(next);
 
 	bool updated = false;
 	for (uint8_t ch = 0; ch < CHANNELS_PER_PIXEL; ch++) {
-		float curr = current.channel[ch];
-		float goal = _transition.target[ch];
-		float org = _origin[ch];
-		float next = org + (goal - org) * nowPct;
-		uint8_t nextV = next < 0 ? 0 : next > 0xFF ? 0xFF : (uint8_t)next;
-		if (nextV == curr) continue;
-		updated = true;
-		current.channel[ch] = nextV;
+		updated = updated || nextColor.channel[ch] != current.channel[ch];
+		current.channel[ch] = nextColor.channel[ch];
 	}
 	return updated;
 }
 
-float StarState::CalcElapsedPct(uint16_t timeMs)
+float StarState::CalcElapsedPct()
 {
-	uint16_t durationMs = TRANSITION_DURATION_TO_MS(_transition.duration);
-	uint16_t elapsedMs = timeMs - _startMs;
-	float elapsedPct = elapsedMs * 1.0 / durationMs;
+	uint8_t now16ms = (uint16_t)millis() >> 4;
+	uint8_t duration16ms = _transition.flags.duration32ms << 1;
+	uint8_t elapsed16ms = now16ms - _start16ms;
+	float elapsedPct = elapsed16ms * 1.0 / duration16ms;
 	return elapsedPct < 0 ? 0 : elapsedPct > 1 ? 1 : elapsedPct;
+}
+
+uint8_t StarState::InterpolateByte(float pct, int16_t a, int16_t b)
+{
+ 	int16_t res = pct * (b - a) + a;
+ 	return res < 0 ? 0 : res > 0xFF ? 0xFF : res;
 }

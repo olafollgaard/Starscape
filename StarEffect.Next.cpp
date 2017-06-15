@@ -3,24 +3,20 @@
 
 void StarEffect::Next(transition_t& transition)
 {
-	const Limits* limits = &_activeLimits;
+	transition.origin = transition.target;
+	const TransitionRange* range = &_activeRange;
 	if (_twinkle.CanStart()) {
 		_twinkle.Start();
-		limits = &twinkleLimits;
+		range = &twinkleRange;
 	}
-	transition.duration = random(limits->lo.duration, limits->hi.duration);
-	uint32_t lo = limits->lo.color;
-	uint32_t hi = limits->hi.color;
-	for (uint8_t ch = 0; ch < CHANNELS_PER_PIXEL; ch++) {
-		if ((uint8_t)hi < 0x80) {
-			uint8_t next = 2 * random((uint8_t)lo, (uint8_t)hi);
-			next = next < (uint8_t)hi ? 0 : next - (uint8_t)hi;
-			transition.target[ch] = next;
-		}
-		else {
-			transition.target[ch] = random((uint8_t)lo, (uint8_t)hi);
-		}
-		lo >>= 8;
-		hi >>= 8;
-	}
+	transition.flags.hueDirectSpan = range->lo.color.hue <= range->hi.color.hue;
+	uint16_t durationMs = random(
+		(uint16_t)(range->lo.duration16ms) << 4,
+		(uint16_t)(range->hi.duration16ms + 1) << 4);
+	transition.flags.duration32ms = durationMs >> 5;
+	hbr_t lo = range->lo.color;
+	hbr_t hi = range->hi.color;
+	transition.target.bri = random(0, 101) > range->pctOn ? 0
+		: (uint8_t)random((uint16_t)lo.bri, (uint16_t)hi.bri + 1);
+	transition.target.hue = lo.hue + (uint8_t)random(0, hi.hue + 1 - lo.hue);
 }

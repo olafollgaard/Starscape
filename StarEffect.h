@@ -18,10 +18,10 @@ public:
 
 	static const PeriodLimits periodLimits[];
 	static const time_t periodTransitionDuration;
-	static const Limits twinkleLimits;
+	static const TransitionRange twinkleRange;
 
 	PeriodId _activePeriod;
-	Limits _activeLimits;
+	TransitionRange _activeRange;
 	Twinkle _twinkle;
 
 private:
