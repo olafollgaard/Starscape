@@ -5,7 +5,7 @@
 #include "StarState.h"
 #include "StarEffect.h"
 
-#define STRIP_LENGTH 60
+#define STRIP_LENGTH 120
 
 class StarStrip {
 public:
