@@ -48,15 +48,17 @@ void StatsLcd::Setup()
 	lcd.setCursor(0, 0);
 }
 
-void StatsLcd::Update(uint8_t activePeriod)
+bool StatsLcd::Update()
 {
 	if (IsUpdateNeeded()) {
 		displayTime = now();
 		PrintTime(displayTime);
-		PrintStats(activePeriod, getCurrHeapSize(), getMaxHeapSize(), getStackPos());
-		frameCounter = 0;
+		PrintStats(getCurrHeapSize(), getMaxHeapSize(), getStackPos());
+		frameCounter = 1;
+		return true;
 	}
 	frameCounter++;
+	return false;
 }
 
 bool StatsLcd::IsUpdateNeeded()
@@ -94,12 +96,8 @@ void StatsLcd::PrintColor(uint32_t color)
 	lcd.print((uint16_t)color, HEX);
 }
 
-void StatsLcd::PrintStats(uint8_t activePeriod, uint16_t currHeapSize, uint16_t maxHeapSize, uint16_t stackPos)
+void StatsLcd::PrintStats(uint16_t currHeapSize, uint16_t maxHeapSize, uint16_t stackPos)
 {
-	lcd.setCursor(18, 0);
-	lcd.print('p');
-	lcd.print(activePeriod);
-
 	lcd.setCursor(0, 1);
 	lcd.print(F("hp:"));
 	lcd.print(currHeapSize);
@@ -111,16 +109,7 @@ void StatsLcd::PrintStats(uint8_t activePeriod, uint16_t currHeapSize, uint16_t 
 	lcd.print(stackPos - maxHeapSize);
 	lcd.print(' ');
 
-	// lcd.setCursor(0, 2);
-	// lcd.print(F("lo:"));
-	// lcd.print(starEffect._activeRange.lo.duration16ms);
-	// PrintColor(starEffect._activeLimits.lo.color);
-	// lcd.print(' ');
-	// lcd.print(F("hi:"));
-	// lcd.print(starEffect._activeRange.hi.duration16ms);
-	// lcd.print(' ');
-
-	lcd.setCursor(0, 3);
+	lcd.setCursor(0, 2);
 	lcd.print(F("fps("));
 	lcd.print((int)SECONDS_PER_UPDATE);
 	lcd.print(F("):"));
