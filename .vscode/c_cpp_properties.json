@@ -13,7 +13,8 @@
                     ".",
                     "/home/olaf/arduino-1.8.1/hardware/tools/avr/avr/include"
                 ]
-            }
+            },
+            "intelliSenseMode": "clang-x64"
         }
     ]
 }
