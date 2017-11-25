@@ -4,6 +4,14 @@
             "name": "Linux",
             "includePath": [
                 ".",
+                "/home/olaf/arduino-1.8.1/hardware/arduino/avr/variants/eightanaloginputs",
+                "/home/olaf/arduino-1.8.1/hardware/arduino/avr/cores/arduino",
+                "/home/olaf/Arduino/libraries/LiquidCrystal",
+                "/home/olaf/Arduino/libraries/DS3232RTC",
+                "/home/olaf/Arduino/libraries/Adafruit_NeoPixel",
+                "/home/olaf/Arduino/libraries/Time",
+                "/home/olaf/arduino-1.8.1/hardware/arduino/avr/libraries/Wire/src",
+                "/home/olaf/arduino-1.8.1/hardware/arduino/avr/libraries/Wire/src/utility",
                 "/home/olaf/arduino-1.8.1/hardware/tools/avr/avr/include"
             ],
             "browse": {
@@ -11,10 +19,20 @@
                 "databaseFilename": "",
                 "path": [
                     ".",
-                    "/home/olaf/arduino-1.8.1/hardware/tools/avr/avr/include"
+                    "/home/olaf/arduino-1.8.1/hardware/arduino/avr/variants/eightanaloginputs",
+                    "/home/olaf/arduino-1.8.1/hardware/arduino/avr/cores/arduino",
+                    "/home/olaf/Arduino/libraries/LiquidCrystal",
+                    "/home/olaf/Arduino/libraries/DS3232RTC",
+                    "/home/olaf/Arduino/libraries/Adafruit_NeoPixel",
+                    "/home/olaf/Arduino/libraries/Time",
+                    "/home/olaf/arduino-1.8.1/hardware/arduino/avr/libraries/Wire/src",
+                    "/home/olaf/arduino-1.8.1/hardware/arduino/avr/libraries/Wire/src/utility",
+                    "/home/olaf/arduino-1.8.1/hardware/tools/avr/avr/include",
+                    "${workspaceRoot}"
                 ]
             },
             "intelliSenseMode": "clang-x64"
         }
-    ]
+    ],
+    "version": 3
 }
